@@ -9,6 +9,7 @@
 			"testProp",
 			"fnBind"
 		],
+	    "classPrefix": "",
 		"uglify" : true,
 		"tests" : [],
 		"excludeTests": [],
