@@ -49,7 +49,7 @@ module.exports = function (modernizrPath) {
 				"options": options,
 				"minify": minify,
 				"dest": settings.dest,
-				"classPrefix": settings.classPrefix
+				"classPrefix": settings.cssprefix
 			};
 
 			// Perform a series of checks to validify cache
