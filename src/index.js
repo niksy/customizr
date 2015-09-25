@@ -16,28 +16,52 @@ module.exports = function (settings, callback) {
 		return this.init();
 	};
 
+	function prepareCustomTests (customTests, cb) {
+
+		if ( !customTests.length ) {
+			return cb();
+		}
+
+		var customTestsPath = path.join(modernizrPath, 'feature-detects/custom-tests');
+		try {
+			fs.statSync(customTestsPath);
+		} catch ( e ) {
+			fs.mkdirSync(customTestsPath);
+		}
+		customTests.forEach(function (test) {
+			var testFilename = path.basename(test);
+			fs.writeFileSync(path.join(customTestsPath, testFilename), fs.readFileSync(fs.realpathSync(test)));
+		});
+		return cb();
+	}
+
 	Customizr.prototype = {
 		init : function () {
 
 			// Store settings
 			this.utils.storeSettings(settings);
 
-			// Sequentially return promises
-			promise.seq([
+			prepareCustomTests(this.utils.getSettings().customTests, function () {
 
-				// Use Modernizr to fetch metadata from each feature detect
-				this.metadata.init.bind(this),
+				// Sequentially return promises
+				promise.seq([
 
-				// Look in the current project for references to tests
-				this.crawler.init.bind(this),
+					// Use Modernizr to fetch metadata from each feature detect
+					this.metadata.init.bind(this),
 
-				// Construct a list with matching positives, tell Modernizr to build a custom suite
-				this.builder.init.bind(this),
+					// Look in the current project for references to tests
+					this.crawler.init.bind(this),
 
-				// Send done callback
-				this.finalize.bind(this)
+					// Construct a list with matching positives, tell Modernizr to build a custom suite
+					this.builder.init.bind(this),
 
-			]);
+					// Send done callback
+					this.finalize.bind(this)
+
+				]);
+
+			}.bind(this));
+
 		},
 
 		finalize : function (obj) {
