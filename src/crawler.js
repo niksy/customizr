@@ -186,7 +186,18 @@ module.exports = function (modernizrPath) {
 
 			var excludedTests = settings.excludeTests.map(function (test) {
 				var data = metadata.filter(function (data) {
+					if ( Array.isArray(data.property) ) {
+						return data.property.indexOf(test) !== -1;
+					}
 					return data.property === test;
+				}).map(function (data) {
+					if ( Array.isArray(data.property) ) {
+						data.property = test;
+					}
+					if ( Array.isArray(data.cssclass) ) {
+						data.cssclass = test;
+					}
+					return data;
 				});
 
 				return data[0] || {};
