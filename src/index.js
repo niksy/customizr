@@ -4,13 +4,14 @@ module.exports = function (settings, callback) {
 
 	// Dependencies
 	var fs = require("fs"),
-		path = require("path");
+		path = require("path"),
+		pkgDir = require("pkg-dir");
 
 	// Deferreds
 	var promise = require("promised-io/promise");
 
 	// Modernizr
-	var modernizrPath = path.join(__dirname, "..", "node_modules", "modernizr");
+	var modernizrPath = pkgDir.sync(path.dirname(require.resolve('modernizr')));
 
 	var Customizr = function () {
 		return this.init();
