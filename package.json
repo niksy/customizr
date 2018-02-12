@@ -1,6 +1,7 @@
 {
   "name": "customizr",
   "version": "1.0.0-alpha",
+  "private": true,
   "description": "",
   "main": "src",
   "bin": {
